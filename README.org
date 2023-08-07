@@ -1,0 +1,23 @@
+#+TITLE: quran.el
+
+Read the Holy Qur'an from Emacs.
+
+** Usage
+
+Source the ~quran.el~ file, and then type in the surah (and verses)
+you want to read with the ~quran-read~ command. Once you're done,
+you can close all the opened buffers and delete the downloaded files
+with the ~quran-close~ command.
+
+Note that you need ~curl~ for this program to function properly.
+
+** Checklist
+
+- [ ] Individual verses
+- [ ] Translations
+- [ ] Recitations
+- [ ] Persistent files
+
+** Acknowledgments
+
+The Arabic text and the translations come from [[https://tanzil.net][Tanzil]].
