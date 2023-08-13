@@ -70,6 +70,10 @@
 
   (interactive "sReference: ")
   (pcase-let ((`(,surah . ,ayat) (__parse_reference ref)))
+    (when (null __arabic-text-path)
+      (let ((p (__download-arabic)))
+	(while (eq (process-status p) 'run)
+	  (sleep-for 1))))
     (__load-surah surah ayat)
     (quran-mode)))
 
@@ -77,6 +81,7 @@
   "Kill all buffers opened by quran.el and delete text files"
   (interactive)
   (delete-file __arabic-text-path)
+  (setq __arabic-text-path nil)
   (dolist (buf quran-buffers)
     (kill-buffer buf))
   (setq quran-buffers nil))
