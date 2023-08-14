@@ -13,10 +13,11 @@ Note that you need ~curl~ for this program to function properly.
 
 ** Checklist
 
-- [ ] Individual verses
+- [x] Individual verses
 - [ ] Translations
 - [ ] Recitations
 - [ ] Persistent files
+- [ ] Document configuration
 
 ** Acknowledgments
 

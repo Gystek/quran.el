@@ -43,7 +43,7 @@
    indicating the quarter of a hizb, or the eighth
    of a juz) in the Qur'anic text")
 
-(defun quran-mode ()
+(defun quran-mode-enable ()
   (interactive)
   "Enable Qur'an mode for the current buffer"
   (if (not (member quran-type '("uthmani" "simple")))
@@ -54,6 +54,15 @@
     (setq cursor-type nil)
     (toggle-truncate-lines -1)
     (visual-line-mode 1)))
+
+(defun quran-mode-disable ()
+  (interactive)
+  "Disable Qur'an mode in the current buffer"
+  (setq buffer-read-only nil)
+  (setq cursor-type t)
+  (text-scale-increase 0)
+  (toggle-truncate-lines 1)
+  (visual-line-mode -1))
 
 (defun quran-read (ref)
   "Read a surah or ayat of the Qur'an.
@@ -73,9 +82,9 @@
     (when (null __arabic-text-path)
       (let ((p (__download-arabic)))
 	(while (eq (process-status p) 'run)
-	  (sleep-for 1))))
+	  (sleep-for 0.1))))
     (__load-surah surah ayat)
-    (quran-mode)))
+    (quran-mode-enable)))
 
 (defun quran-close ()
   "Kill all buffers opened by quran.el and delete text files"
@@ -83,8 +92,8 @@
   (delete-file __arabic-text-path)
   (setq __arabic-text-path nil)
   (dolist (buf quran-buffers)
-    (kill-buffer buf))
-  (setq quran-buffers nil))
+      (kill-buffer buf))
+  (setf quran-buffers nil))
 
 ; Internals
 
@@ -145,6 +154,8 @@
   (let ((bname (format "Surah %s" (car (nth num __surahs-latin)))))
     (setq quran-buffers (cons bname quran-buffers))
     (switch-to-buffer bname))
+  (quran-mode-disable)
+  (erase-buffer)
   (insert-file-contents __arabic-text-path)
 
   ; Keep only this surah
@@ -157,13 +168,29 @@
   (end-of-buffer)
   (delete-region (mark) (point))
 
+  ; Remove unwanted ayat
+
+  (beginning-of-buffer)
+  (unless (null ayat)
+    (let ((length (cdr (nth num __surahs-latin)))
+	  (i 0))
+      (print ayat)
+      (while (< i length)
+	(cl-incf i)
+	(if (member i ayat)
+	    (progn
+	      (insert (format "%s " (__number-to-arabic i)))
+	      (goto-line (+ (line-number-at-pos) 1)))
+	  (print i)
+	  (kill-whole-line)))))
+
   ; Remove ayah and surah numbering
   (beginning-of-buffer)
   (replace-regexp "[0-9]+|" "")
-  (beginning-of-buffer)
 
   ; Remove the basmala if not in al-Fātiḥah
-  (unless (= num 1)
+  (beginning-of-buffer)
+  (unless (= num 0)
     (move-beginning-of-line nil)
     (set-mark-command nil)
     (move-end-of-line nil)
@@ -171,7 +198,9 @@
 			      ""
 			      (mark)
 			      (point))
-    (move-beginning-of-line nil)))
+    (move-beginning-of-line nil))
+
+  (beginning-of-buffer))
 
 (defvar __surahs-latin
   '(("al-Fātiḥah" . 7)
