@@ -9,16 +9,19 @@ you want to read with the ~quran-read~ command. Once you're done,
 you can close all the opened buffers and delete the downloaded files
 with the ~quran-close~ command.
 
-Note that you need ~curl~ for this program to function properly.
+Note that you need ~curl~ and ~git~ installed on your machine for
+this program to function properly.
 
 ** Checklist
 
-- [x] Individual verses
-- [ ] Translations
+- [X] Individual verses
+- [X] Translations
 - [ ] Recitations
 - [ ] Persistent files
 - [ ] Document configuration
 
 ** Acknowledgments
 
-The Arabic text and the translations come from [[https://tanzil.net][Tanzil]].
+The Arabic text comes from [[https://tanzil.net][Tanzil]].
+
+The translations are fetched from brother [[https://github.com/Jomtek][Jomtek]]'s [[https://github.com/Jomtek/quran-translated][GitHub repository]].
